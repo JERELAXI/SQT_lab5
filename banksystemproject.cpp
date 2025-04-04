@@ -18,7 +18,7 @@ private:
     static long NextAccountNumber;
 
 public:
-    Account() {}
+    Account() : accountNumber(0), firstName(""), lastName(""), balance(0) {}
     Account(string fname, string lname, float balance);
     long getAccNo() { return accountNumber; }
     string getFirstName() { return firstName; }
@@ -225,25 +225,38 @@ Account Bank::OpenAccount(string fname, string lname, float balance) {
 
 Account Bank::BalanceEnquiry(long accountNumber) {
     map<long, Account>::iterator itr = accounts.find(accountNumber);
-    return itr->second;
+    if(itr != accounts.end()) {
+        return itr->second;
+    }
+    return Account();
 }
 
 Account Bank::Deposit(long accountNumber, float amount) {
     map<long, Account>::iterator itr = accounts.find(accountNumber);
-    itr->second.Deposit(amount);
-    return itr->second;
+    if(itr != accounts.end()) {
+        itr->second.Deposit(amount);
+        return itr->second;
+    }
+    return Account();
 }
 
 Account Bank::Withdraw(long accountNumber, float amount) {
     map<long, Account>::iterator itr = accounts.find(accountNumber);
-    itr->second.Withdraw(amount);
-    return itr->second;
+    if(itr != accounts.end()) {
+        itr->second.Withdraw(amount);
+        return itr->second;
+    }
+    return Account();
 }
 
 void Bank::CloseAccount(long accountNumber) {
     map<long, Account>::iterator itr = accounts.find(accountNumber);
-    cout << "Account Deleted" << itr->second;
-    accounts.erase(accountNumber);
+    if(itr != accounts.end()) {
+        cout << "Account Deleted" << itr->second;
+        accounts.erase(accountNumber);
+    } else {
+        cout << "Account not found" << endl;
+    }
 }
 
 void Bank::ShowAllAccounts() {
